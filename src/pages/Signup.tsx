@@ -1,14 +1,21 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+
 import { Eye, EyeOff, Mail, Lock, User, GraduationCap, BookOpen } from "lucide-react";
 import learvaLogo from "@/assets/learva-logo.png";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -21,20 +28,16 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+
   const { signup } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const validatePassword = (password: string): string | null => {
-    if (password.length < 6) {
-      return "Password must be at least 6 characters";
-    }
-    if (!/[a-zA-Z]/.test(password)) {
-      return "Password must contain at least 1 letter";
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    if (password.length < 6) return "Password must be at least 6 characters";
+    if (!/[a-zA-Z]/.test(password)) return "Password must contain at least 1 letter";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
       return "Password must contain at least 1 special character";
-    }
     return null;
   };
 
@@ -52,26 +55,12 @@ const Signup = () => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!validateEmail(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!validateEmail(formData.email)) newErrors.email = "Enter a valid email";
     const passwordError = validatePassword(formData.password);
-    if (passwordError) {
-      newErrors.password = passwordError;
-    }
-
-    if (!formData.major) {
-      newErrors.major = "Please select your major";
-    }
-
-    if (!formData.collegeYear) {
-      newErrors.collegeYear = "Please select your year";
-    }
+    if (passwordError) newErrors.password = passwordError;
+    if (!formData.major) newErrors.major = "Please select your major";
+    if (!formData.collegeYear) newErrors.collegeYear = "Please select your year";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -81,15 +70,21 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const success = await signup(formData);
+      const success = await signup(formData); // signup stores locally in AuthContext
       if (success) {
         toast({
           title: "Account created! 🎉",
           description: "Welcome to Learva AI. Please sign in to continue.",
         });
         navigate("/login");
+      } else {
+        toast({
+          title: "Signup failed",
+          description: "Email may already exist or something went wrong",
+          variant: "destructive",
+        });
       }
-    } catch (error) {
+    } catch (err) {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
@@ -148,6 +143,7 @@ const Signup = () => {
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name */}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-foreground">Full Name</Label>
               <div className="relative">
@@ -164,8 +160,9 @@ const Signup = () => {
               {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
             </div>
 
+            {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground">Email (Username)</Label>
+              <Label htmlFor="email" className="text-foreground">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -180,6 +177,7 @@ const Signup = () => {
               {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password" className="text-foreground">Password</Label>
               <div className="relative">
@@ -206,42 +204,40 @@ const Signup = () => {
               </p>
             </div>
 
+            {/* Major */}
             <div className="space-y-2">
               <Label htmlFor="major" className="text-foreground">Major</Label>
               <div className="relative">
                 <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                <Select value={formData.major} onValueChange={(value) => handleChange("major", value)}>
-                  <SelectTrigger className="pl-10">
-                    <SelectValue placeholder="Select your major" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {majors.map((major) => (
-                      <SelectItem key={major} value={major}>
-                        {major}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <select
+                  value={formData.major}
+                  onChange={(e) => handleChange("major", e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border rounded"
+                >
+                  <option value="">Select your major</option>
+                  {majors.map((major) => (
+                    <option key={major} value={major}>{major}</option>
+                  ))}
+                </select>
               </div>
               {errors.major && <p className="text-sm text-destructive">{errors.major}</p>}
             </div>
 
+            {/* College Year */}
             <div className="space-y-2">
               <Label htmlFor="collegeYear" className="text-foreground">College Year</Label>
               <div className="relative">
                 <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                <Select value={formData.collegeYear} onValueChange={(value) => handleChange("collegeYear", value)}>
-                  <SelectTrigger className="pl-10">
-                    <SelectValue placeholder="Select your year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {collegeYears.map((year) => (
-                      <SelectItem key={year.value} value={year.value}>
-                        {year.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <select
+                  value={formData.collegeYear}
+                  onChange={(e) => handleChange("collegeYear", e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 border rounded"
+                >
+                  <option value="">Select your year</option>
+                  {collegeYears.map((year) => (
+                    <option key={year.value} value={year.value}>{year.label}</option>
+                  ))}
+                </select>
               </div>
               {errors.collegeYear && <p className="text-sm text-destructive">{errors.collegeYear}</p>}
             </div>

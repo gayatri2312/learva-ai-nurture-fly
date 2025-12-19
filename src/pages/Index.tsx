@@ -1,9 +1,21 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sparkles, BookOpen, Trophy, Brain } from "lucide-react";
 import learvaLogo from "@/assets/learva-logo.png";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}

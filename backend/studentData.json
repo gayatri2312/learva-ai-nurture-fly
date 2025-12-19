@@ -1,0 +1,33 @@
+{
+  "name": "Alex Student",
+  "id": "STU-2025-001",
+  "courses": [
+    {"id":1,"name":"Data Structures & Algorithms","icon":"💻","progress":75,"status":"on-track","totalHours":48,"completedModules":8,"totalModules":12},
+    {"id":2,"name":"Machine Learning Fundamentals","icon":"🤖","progress":45,"status":"needs-attention","totalHours":32,"completedModules":5,"totalModules":10},
+    {"id":3,"name":"Web Development","icon":"🌐","progress":90,"status":"on-track","totalHours":65,"completedModules":9,"totalModules":10},
+    {"id":4,"name":"Database Systems","icon":"🗄️","progress":60,"status":"on-track","totalHours":40,"completedModules":6,"totalModules":10}
+  ],
+  "learningInteractions":{"video":145,"audio":32,"text":67},
+  "topicPerformance":[
+    {"topic":"Dynamic Programming","subject":"Data Structures & Algorithms","accuracy":45,"attemptsCount":8,"lastAttemptDate":"2025-01-10","needsImprovement":true},
+    {"topic":"Neural Networks","subject":"Machine Learning","accuracy":52,"attemptsCount":6,"lastAttemptDate":"2025-01-12","needsImprovement":true},
+    {"topic":"SQL Joins","subject":"Database Systems","accuracy":68,"attemptsCount":10,"lastAttemptDate":"2025-01-14","needsImprovement":true},
+    {"topic":"Graph Algorithms","subject":"Data Structures & Algorithms","accuracy":78,"attemptsCount":12,"lastAttemptDate":"2025-01-15","needsImprovement":false},
+    {"topic":"React Hooks","subject":"Web Development","accuracy":88,"attemptsCount":15,"lastAttemptDate":"2025-01-16","needsImprovement":false}
+  ],
+  "quizzes":{"completed":24,"upcoming":5,"averageScore":73},
+  "assignments":{"pending":3,"submitted":18},
+  "practiceQuestions":{"available":156,"completed":89},
+  "weeklyEngagement":[
+    {"day":"Mon","hours":3.5},{"day":"Tue","hours":4.2},{"day":"Wed","hours":2.8},
+    {"day":"Thu","hours":5.1},{"day":"Fri","hours":3.9},{"day":"Sat","hours":4.5},{"day":"Sun","hours":2.3}
+  ],
+  "performanceHistory":[
+    {"week":"Week 1","score":62},{"week":"Week 2","score":65},{"week":"Week 3","score":68},
+    {"week":"Week 4","score":71},{"week":"Week 5","score":73},{"week":"Week 6","score":76},{"week":"Week 7","score":79}
+  ],
+  "quizScores":[
+    {"quiz":"Quiz 1","score":68},{"quiz":"Quiz 2","score":72},{"quiz":"Quiz 3","score":65},
+    {"quiz":"Quiz 4","score":78},{"quiz":"Quiz 5","score":82},{"quiz":"Quiz 6","score":75},{"quiz":"Quiz 7","score":85}
+  ]
+}
