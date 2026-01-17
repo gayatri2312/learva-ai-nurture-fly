@@ -26,6 +26,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Store registered users (simulating a database)
+const registeredUsers: User[] = [];
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
@@ -41,17 +44,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data.password.length < 6) {
       return { success: false, message: "Password must be at least 6 characters" };
     }
-    if (user && user.email === data.email) {
+    
+    // Check if email already exists
+    const existingUser = registeredUsers.find(u => u.email === data.email);
+    if (existingUser) {
       return { success: false, message: "Email already exists" };
     }
 
-    // Store user
-    setUser(data);
+    // Store user in our "database"
+    registeredUsers.push(data);
     return { success: true };
   };
 
   const login = async (email: string, password: string) => {
-    if (user && user.email === email && user.password === password) {
+    // Find user in registered users
+    const foundUser = registeredUsers.find(
+      u => u.email === email && u.password === password
+    );
+    
+    if (foundUser) {
+      setUser(foundUser);
       return true;
     }
     return false;
